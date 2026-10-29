@@ -4,7 +4,7 @@ model:
 training:
   seed: 23
   epochs: 30
-  batch_size: 4
+  batch_size: 8
   learning_rate: 0.001
   output_dir: ./runs/
   num_workers: 0
