@@ -91,7 +91,8 @@ class HeartNetwork_01(nn.Module):
         self.left = nn.Conv2d(in_channels, 64, 7, padding=3, stride=2)
         self.right = nn.Conv2d(in_channels, 64, 7, padding=3, stride=2)
 
-        self.bn1 = nn.BatchNorm2d(64)
+        self.left_bn = nn.BatchNorm2d(64)
+        self.right_bn = nn.BatchNorm2d(64)
 
         # 第一阶段
         self.left_branch_1 = LateralBranch(64, 64)
@@ -131,41 +132,41 @@ class HeartNetwork_01(nn.Module):
         self.head = nn.Conv2d(32, out_channels, 3, padding=1)
 
     def forward(self, x):
-        left_1 = F.relu(self.bn1(self.left(x)))
-        right_1 = F.relu(self.bn1(self.right(x)))
+        left_1 = F.relu(self.left_bn(self.left(x)))
+        right_1 = F.relu(self.right_bn(self.right(x)))
 
         # ----------------
         center_1 = torch.cat([left_1, right_1], dim=1)
+        center_feature_1 = self.center_branch_1(center_1)
         left_11 = torch.cat(
-            [self.left_branch_1(left_1), left_1, self.center_branch_1(center_1)], dim=1
+            [self.left_branch_1(left_1), left_1, center_feature_1], dim=1
         )
         right_11 = torch.cat(
-            [self.right_branch_1(right_1), right_1, self.center_branch_1(center_1)],
-            dim=1,
+            [self.right_branch_1(right_1), right_1, center_feature_1], dim=1
         )
         left_2 = self.left_fusion_1(left_11)
         right_2 = self.right_fusion_1(right_11)
 
         # ----------------
         center_2 = torch.cat([left_2, right_2], dim=1)
+        center_feature_2 = self.center_branch_2(center_2)
         left_22 = torch.cat(
-            [self.left_branch_2(left_2), left_2, self.center_branch_2(center_2)], dim=1
+            [self.left_branch_2(left_2), left_2, center_feature_2], dim=1
         )
         right_22 = torch.cat(
-            [self.right_branch_2(right_2), right_2, self.center_branch_2(center_2)],
-            dim=1,
+            [self.right_branch_2(right_2), right_2, center_feature_2], dim=1
         )
         left_3 = self.left_fusion_2(left_22)
         right_3 = self.right_fusion_2(right_22)
 
         # ----------------
         center_3 = torch.cat([left_3, right_3], dim=1)
+        center_feature_3 = self.center_branch_3(center_3)
         left_33 = torch.cat(
-            [self.left_branch_3(left_3), left_3, self.center_branch_3(center_3)], dim=1
+            [self.left_branch_3(left_3), left_3, center_feature_3], dim=1
         )
         right_33 = torch.cat(
-            [self.right_branch_3(right_3), right_3, self.center_branch_3(center_3)],
-            dim=1,
+            [self.right_branch_3(right_3), right_3, center_feature_3], dim=1
         )
         left_4 = self.left_fusion_3(left_33)
         right_4 = self.right_fusion_3(right_33)
@@ -201,8 +202,9 @@ class HeartNetwork_01(nn.Module):
         return out
 
 
-# model = HeartNetwork_01()
-# x = torch.randn(2, 3, 256, 256)
-# with torch.no_grad():
-#     model(x)
-#     torch.onnx.export(model, (x,), "onnx/03.onnx", external_data=False)
+if __name__ == "__main__":
+    model = HeartNetwork_01()
+    x = torch.randn(2, 3, 256, 256)
+    with torch.no_grad():
+        model(x)
+        torch.onnx.export(model, (x,), "onnx/01.onnx", external_data=False)
