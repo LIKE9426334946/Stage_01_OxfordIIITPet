@@ -12,3 +12,4 @@ dataset:
   root: ./data
   image_size: [256, 256]
   val_ratio: 0.2
+  

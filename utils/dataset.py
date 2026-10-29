@@ -10,10 +10,15 @@ from .config import load_config
 
 
 class PetTransform:
-    def __call__(self, image, mask, image_size):
+    def __init__(self, image_size):
+        self.image_size = image_size
 
-        image = F.resize(image, image_size, interpolation=InterpolationMode.BILINEAR)
-        mask = F.resize(mask, image_size, interpolation=InterpolationMode.NEAREST)
+    def __call__(self, image, mask):
+
+        image = F.resize(
+            image, self.image_size, interpolation=InterpolationMode.BILINEAR
+        )
+        mask = F.resize(mask, self.image_size, interpolation=InterpolationMode.NEAREST)
         image = F.to_tensor(image)
 
         mask = np.array(mask)
@@ -34,12 +39,12 @@ def load_dataset():
         root=image_root,
         split="trainval",
         target_types="segmentation",
-        transforms=PetTransform(),
+        transforms=PetTransform(image_size),
         download=True,
     )
     val_size = int(len(dataset) * val_ratio)
     train_size = len(dataset) - val_size
     train_dataset, val_dataset = random_split(
-        dataset, [train_size, val_size], generator=torch.Generator.manual_seed(seed)
+        dataset, [train_size, val_size], generator=torch.Generator().manual_seed(seed)
     )
-    return train_dataset,val_dataset
+    return train_dataset, val_dataset
