@@ -7,9 +7,12 @@ training:
   batch_size: 4
   learning_rate: 0.001
   output_dir: ./runs/
+  num_workers: 0
 
 dataset:
   root: ./data
   image_size: [256, 256]
   val_ratio: 0.2
-  
+
+metrics:
+  threshold: 0.5
