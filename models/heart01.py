@@ -204,6 +204,8 @@ class HeartNetwork_01(nn.Module):
 
 if __name__ == "__main__":
     model = HeartNetwork_01()
+    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"可训练参数量: {trainable_params / 1e6:.2f} M") # 41.29M
     x = torch.randn(2, 3, 256, 256)
     with torch.no_grad():
         model(x)

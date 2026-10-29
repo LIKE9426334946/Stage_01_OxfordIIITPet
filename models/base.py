@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 import segmentation_models_pytorch as smp
 
@@ -16,3 +17,14 @@ class BaseModel(nn.Module):
 
     def forward(self, x):
         return self.unet(x)
+
+
+if __name__ == "__main__":
+    model = BaseModel()
+    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"可训练参数量: {trainable_params / 1e6:.2f} M") # 14.33M
+    x = torch.randn(2, 3, 256, 256)
+
+    with torch.no_grad():
+        model(x)
+        torch.onnx.export(model, (x,), "onnx/01.onnx", external_data=False)
