@@ -1,0 +1,14 @@
+model:
+  name: base
+
+training:
+  seed: 23
+  epochs: 30
+  batch_size: 4
+  learning_rate: 0.001
+  output_dir: ./runs/
+
+dataset:
+  root: ./data
+  image_size: [256, 256]
+  val_ratio: 0.2
