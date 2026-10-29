@@ -21,7 +21,7 @@ class PetTransform:
         mask = np.array(mask)
         # 原标签 1=宠物，2=背景，3=不确定边界；这里将 1 和 3 都并入前景。
         mask = (mask != 2).astype(np.float32)
-        mask = torch.from_numpy(mask).unsqueeze(0)
+        mask = torch.from_numpy(mask).unsqueeze(0) # 变为[1,256,256]
 
         return image, mask
 

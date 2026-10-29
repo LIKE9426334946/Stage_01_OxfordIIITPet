@@ -21,7 +21,7 @@ class BinarySegmentationMetrics:
         )
         # get_stats 返回 [B, 1]；先按样本求和，避免对 batch 指标直接平均。
         self.totals += torch.stack(
-            [value.sum(dim=0, keepdim=True) for value in stats]
+            [value.sum(dim=0, keepdim=True) for value in stats] # 把所有样本的TP加起来汇总为一个数，其它也是类似
         )
 
     def compute(self):
