@@ -3,12 +3,12 @@ import torch.nn as nn
 import segmentation_models_pytorch as smp
 
 
-class BaseModel(nn.Module):
+class BaseModel_02(nn.Module):
     def __init__(self, in_channels=3, out_channels=1):
         super().__init__()
 
         self.unet = smp.Unet(
-            encoder_name="resnet18",
+            encoder_name="resnet34",
             encoder_weights=None,
             in_channels=in_channels,
             classes=out_channels,
@@ -20,9 +20,9 @@ class BaseModel(nn.Module):
 
 
 if __name__ == "__main__":
-    model = BaseModel()
+    model = BaseModel_02()
     trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    print(f"可训练参数量: {trainable_params / 1e6:.2f} M") # 14.33M
+    print(f"可训练参数量: {trainable_params / 1e6:.2f} M")  # 14.33M
     x = torch.randn(2, 3, 256, 256)
 
     with torch.no_grad():
