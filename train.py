@@ -1,6 +1,5 @@
 import csv
 import random
-from datetime import datetime
 from pathlib import Path
 
 import numpy as np
@@ -93,22 +92,20 @@ def main(argv=None):
     print("训练集数量：", len(train_dataset))
     print("验证集数量：", len(val_dataset))
 
-    model = build_model(config["model"]).to(device)
+    model = build_model(config).to(device)
     criterion = nn.BCEWithLogitsLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=training["learning_rate"])
 
     # 每次训练使用独立目录，防止覆盖之前的权重和日志。
-    run_name = f"{config['model']['name']}_{datetime.now():%Y%m%d_%H%M%S_%f}"
+    run_name = f"{config['model']['name']}"
     output_dir = Path(training["output_dir"]) / run_name
-    output_dir.mkdir(parents=True, exist_ok=False)
+    output_dir.mkdir(parents=True, exist_ok=True)
     with (output_dir / "config.yaml").open("w", encoding="utf-8") as file:
         yaml.safe_dump(config, file, allow_unicode=True, sort_keys=False)
     print("本次训练结果保存到：", output_dir)
 
     metric_names = ("loss", "iou", "miou", "dice", "accuracy", "precision", "recall")
-    fieldnames = ["epoch"] + [
-        f"{phase}_{name}" for phase in ("train", "val") for name in metric_names
-    ]
+    fieldnames = ["epoch"] + [f"{phase}_{name}" for phase in ("train", "val") for name in metric_names]
     best_miou = -1.0
     best_epoch = 0
 
@@ -118,11 +115,20 @@ def main(argv=None):
 
         for epoch in range(1, training["epochs"] + 1):
             train_scores = run_epoch(
-                model, train_loader, criterion, device, threshold,
-                f"Epoch {epoch}/{training['epochs']} Train", optimizer=optimizer,
+                model,
+                train_loader,
+                criterion,
+                device,
+                threshold,
+                f"Epoch {epoch}/{training['epochs']} Train",
+                optimizer=optimizer,
             )
             val_scores = run_epoch(
-                model, val_loader, criterion, device, threshold,
+                model,
+                val_loader,
+                criterion,
+                device,
+                threshold,
                 f"Epoch {epoch}/{training['epochs']} Val",
             )
             print("训练：", format_scores(train_scores))
@@ -135,7 +141,6 @@ def main(argv=None):
             file.flush()
 
             # 保存纯模型 state_dict，后续直接用 model.load_state_dict 加载。
-            torch.save(model.state_dict(), output_dir / "last.pth")
             if val_scores["miou"] > best_miou:
                 best_miou = val_scores["miou"]
                 best_epoch = epoch

@@ -4,7 +4,7 @@ model:
 training:
   seed: 23
   epochs: 30
-  batch_size: 8
+  batch_size: 16
   learning_rate: 0.001
   output_dir: ./runs/
   num_workers: 0
@@ -13,6 +13,8 @@ dataset:
   root: ./data
   image_size: [256, 256]
   val_ratio: 0.2
+  in_channels: 3
+  out_channels: 1
 
 metrics:
   threshold: 0.5
