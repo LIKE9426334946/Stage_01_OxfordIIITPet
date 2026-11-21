@@ -8,6 +8,7 @@ from .heart02 import HeartNetwork_02
 from .self01 import SelfModel_01
 from .self02 import SelfModel_02
 from .self03 import SelfModel_03
+from .self04 import SelfModel_04
 
 MODEL_REGISTRY = {
     "base01": BaseModel_01,
@@ -20,6 +21,7 @@ MODEL_REGISTRY = {
     "self01": SelfModel_01,
     "self02": SelfModel_02,
     "self03": SelfModel_03,
+    "self04": SelfModel_04,
 }
 
 
