@@ -115,13 +115,15 @@ class SelfModel_03(nn.Module):
 
 
 if __name__ == "__main__":
-    model = SelfModel_03(in_channels=3, classes=1)
+    model = SelfModel_03(in_channels=3, out_channels=1)
 
     x = torch.randn(2, 3, 256, 256)
 
     y = model(x)
 
     print(y.shape)
+    model.eval()
     with torch.no_grad():
         model(x)
+
         torch.onnx.export(model, (x,), "onnx/03.onnx", external_data=False)

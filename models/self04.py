@@ -1,4 +1,4 @@
-# 自己写的UNet+ResNet18网络
+# 自己写的UNet+ResNet18网络，从输入x多引出了几条路径
 
 from pathlib import Path
 
