@@ -17,7 +17,7 @@ class MyActivation(nn.Module):
     def forward(self, x):
 
         # 原始激活函数
-        y = torch.where(x <= 0, x, x**2)
+        y = torch.where(x <= 0, 0.01 * x, x)
 
         # 线性映射（仿射变换）
         return self.weight * y + self.bias
