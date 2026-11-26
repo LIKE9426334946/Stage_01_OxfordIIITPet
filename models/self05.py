@@ -10,9 +10,17 @@ class MyActivation(nn.Module):
     def __init__(self):
         super().__init__()
 
+        # 可学习的斜率和偏置
+        self.weight = nn.Parameter(torch.tensor(1.0))
+        self.bias = nn.Parameter(torch.tensor(0.0))
+
     def forward(self, x):
 
-        return torch.where(x <= 0, x, x**2)
+        # 原始激活函数
+        y = torch.where(x <= 0, x, x**2)
+
+        # 线性映射（仿射变换）
+        return self.weight * y + self.bias
 
 
 class BasicBlock(nn.Module):
