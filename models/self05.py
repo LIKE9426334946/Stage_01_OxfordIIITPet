@@ -64,7 +64,7 @@ class DecoderBlock(nn.Module):
         return self.conv(x)
 
 
-class SelfModel_01(nn.Module):
+class SelfModel_05(nn.Module):
     def __init__(self, in_channels, out_channels):
         super().__init__()
         self.stem = nn.Sequential(
@@ -103,7 +103,7 @@ class SelfModel_01(nn.Module):
 
 
 if __name__ == "__main__":
-    model = SelfModel_01(3, 21)
+    model = SelfModel_05(3, 21)
 
     relu_count = sum(isinstance(m, nn.ReLU) for m in model.modules())
 

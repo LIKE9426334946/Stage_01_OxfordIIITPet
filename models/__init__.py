@@ -9,6 +9,7 @@ from .self01 import SelfModel_01
 from .self02 import SelfModel_02
 from .self03 import SelfModel_03
 from .self04 import SelfModel_04
+from .self05 import SelfModel_05
 
 MODEL_REGISTRY = {
     "base01": BaseModel_01,
@@ -22,6 +23,7 @@ MODEL_REGISTRY = {
     "self02": SelfModel_02,
     "self03": SelfModel_03,
     "self04": SelfModel_04,
+    "self05": SelfModel_05,
 }
 
 
